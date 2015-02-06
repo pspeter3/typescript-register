@@ -1,2 +1,3 @@
-# tsreq
+# TypeScript Register
+
 Extension to require TypeScript files from Node
