@@ -1,0 +1,12 @@
+before_install:
+- npm install -g tsd@0.6.0-beta.5
+- tsd reinstall
+- tsd rebundle
+cache:
+  directories:
+  - node_modules
+  - typings
+language: node_js
+node_js:
+- '0.10'
+sudo: false
