@@ -5,6 +5,12 @@
   "path": "typings",
   "bundle": "typings/tsd.d.ts",
   "installed": {
+    "chai/chai.d.ts": {
+      "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
+    },
+    "mocha/mocha.d.ts": {
+      "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
+    },
     "node/node.d.ts": {
       "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
     }
