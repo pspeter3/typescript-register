@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc index.ts --module commonjs --noImplicitAny",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typings": "tsd reinstall"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,8 @@
   "homepage": "https://github.com/pspeter3/tsreq",
   "dependencies": {
     "typescript": "^1.4.1"
+  },
+  "devDependencies": {
+    "tsd": "^0.6.0-beta.5"
   }
 }

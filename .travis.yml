@@ -1,7 +1,5 @@
-before_install:
-- npm install -g tsd@0.6.0-beta.5
-- tsd reinstall
-- tsd rebundle
+before_script:
+- npm run typings
 cache:
   directories:
   - node_modules
