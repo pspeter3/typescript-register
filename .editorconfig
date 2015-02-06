@@ -1,0 +1,16 @@
+# editorconfig.org
+root = true
+
+[*]
+indent_size = 2
+indent_style = space
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.ts]
+indent_size = 4
+max_line_length = 140
+quote_type = double
