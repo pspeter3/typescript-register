@@ -4,6 +4,7 @@
   "description": "Extension to require TypeScript files from Node",
   "main": "index.js",
   "scripts": {
+    "compile": "tsc index.ts --module commonjs --noImplicitAny",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
