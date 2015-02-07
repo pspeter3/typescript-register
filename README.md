@@ -48,8 +48,8 @@ The values are:
 
 Feel free to fork and submit pull requests for the code! Please follow the existing code as an example of style and make sure that all your code passes tests.
 
-[npm-url]: https://www.npmjs.org/package/typesript-register
-[npm-image]: http://img.shields.io/npm/v/typesript-register.svg?style=flat-square
+[npm-url]: https://www.npmjs.org/package/typescript-register
+[npm-image]: http://img.shields.io/npm/v/typescript-register.svg?style=flat-square
 
 [travis-url]: http://travis-ci.org/Asana/pspeter3/typescript-register
 [travis-image]: http://img.shields.io/travis/pspeter3/typescript-register/master.svg?style=flat-square
