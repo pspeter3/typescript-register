@@ -5,6 +5,15 @@ import path = require("path");
 import typescript = require("typescript");
 
 /**
+ * Module Configuration Options
+ */
+enum Config {
+    EMIT_ERROR,
+    USE_CACHE,
+    COMPILER_OPTIONS
+}
+
+/**
  * Requires a TypeScript file
  * @param {Module} module   The node module
  * @param {string} filename The module filename
@@ -26,7 +35,7 @@ require.extensions[".ts"] = req;
  * @return {boolean} Whether or not to emit TypeScript errors
  */
 function emitError(): boolean {
-    return process.env.TYPESCRIPT_REGISTER_EMIT_ERROR || true;
+    return env(Config.EMIT_ERROR, true, toBoolean);
 }
 
 /**
@@ -35,7 +44,42 @@ function emitError(): boolean {
  * @return {boolean} Whether or not to use cached JavaScript files
  */
 function useCache(): boolean {
-    return process.env.TYPESCRIPT_REGISTER_USE_CACHE || true;
+    return env(Config.USE_CACHE, true, toBoolean);
+}
+
+/**
+ * TypeScript Default Configuration
+ * @type {typescript.CompilerOptions}
+ */
+var defaultCompilerOptions: typescript.CompilerOptions = {
+    module: typescript.ModuleKind.CommonJS,
+    outDir: path.join(path.sep, "tmp", "typescript-register", process.cwd()),
+    target: typescript.ScriptTarget.ES5
+};
+
+/**
+ * Checks the environment for JSON stringified compiler options. By default it
+ * will compile TypeScript files into a scoped temp directory using ES5 and
+ * CommonJS targets.
+ * @return {typescript.CompilerOptions} The TypeScript compiler settings
+ */
+function compilerOptions(): typescript.CompilerOptions {
+    return env(Config.COMPILER_OPTIONS, defaultCompilerOptions, toOptions);
+}
+
+/**
+ * Gets a value from env
+ * @param  {Config}   config   The configuration target
+ * @param  {T}        fallback The default value
+ * @param  {Function} map      The map function if the value exists
+ * @return {T}                 The environment variable
+ */
+function env<T>(config: Config, fallback: T, map: (value: string) => T): T {
+    var key: string = "TYPESCRIPT_REGISTER_" + Config[config];
+    if (process.env.hasOwnProperty(key)) {
+        return map(process.env[key]);
+    }
+    return fallback;
 }
 
 /**
@@ -45,9 +89,9 @@ function useCache(): boolean {
  * @return {string}                               The JavaScript filepath
  */
 function dest(filename: string, options: typescript.CompilerOptions): string {
-    var relativePath = path.relative(process.cwd(), filename);
-    var outDir = options.outDir || process.cwd();
-    return path.join(outDir, relativePath.replace(".ts", ".js"));
+    var basename = path.basename(filename, ".ts");
+    var outDir = options.outDir || path.dirname(filename);
+    return path.join(outDir, basename + ".js");
 }
 
 /**
@@ -68,8 +112,8 @@ function isModified(tsPath: string, jsPath: string): boolean {
 
 /**
  * Compiles the TypeScript file
- * @param {string}                      filename The root file to compile
- * @param {typescript.CompilerOptiones} options  The Compiler Options
+ * @param {string}                     filename The root file to compile
+ * @param {typescript.CompilerOptions} options  The Compiler Options
  */
 function compile(filename: string, options: typescript.CompilerOptions): void {
     var host = typescript.createCompilerHost(options);
@@ -83,25 +127,6 @@ function compile(filename: string, options: typescript.CompilerOptions): void {
 }
 
 /**
- * Checks the environment for JSON stringified compiler options. By default it
- * will compile TypeScript files into a scoped temp directory using ES5 and
- * CommonJS targets.
- * @return {typescript.CompilerOptions} The TypeScript compiler settings
- */
-function compilerOptions(): typescript.CompilerOptions {
-    var env: string = process.env.TYPESCRIPT_REGISTER_COMPILER_OPTIONS;
-    if (env) {
-        return <typescript.CompilerOptions>JSON.parse(env);
-    }
-    return {
-        module: typescript.ModuleKind.CommonJS,
-        outDir: path.join(path.sep, "tmp", "tsreq", process.cwd()),
-        target: typescript.ScriptTarget.ES5
-    };
-}
-
-
-/**
  * Converts a list of errors into something readable
  * @param  {typescript.Diagnostic[]} errors The TypeScript Diagnostics
  * @return {Error}                          The Compiler Error
@@ -110,10 +135,35 @@ function checkErrors(errors: typescript.Diagnostic[]): void {
     if (errors.length === 0) {
         return;
     }
-    var errorMessages = errors.map((err: typescript.Diagnostic): string => {
-        return err.messageText;
-    });
+    var errorMessages = errors.map(toErrorName);
     throw new Error(errorMessages.join("\n\n"));
+}
+
+/**
+ * Converts a string to boolean
+ * @param  {string}  value The string value
+ * @return {boolean}       Whether or not the string is "true"
+ */
+function toBoolean(value: string): boolean {
+    return value === "true";
+}
+
+/**
+ * Converts a string to TypeScript compiler options
+ * @param  {string}                     value The string value
+ * @return {typescript.CompilerOptions}       The TypeScript Compiler Options
+ */
+function toOptions(value: string): typescript.CompilerOptions {
+    return <typescript.CompilerOptions>JSON.parse(value);
+}
+
+/**
+ * Get the name of an error
+ * @param  {typescript.Diagnostic} err The TypeScript error
+ * @return {string}                    The readable error
+ */
+function toErrorName(err: typescript.Diagnostic): string {
+    return err.messageText;
 }
 
 /**

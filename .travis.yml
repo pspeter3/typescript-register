@@ -1,5 +1,6 @@
 before_script:
 - npm run typings
+- npm run compile
 cache:
   directories:
   - node_modules

@@ -4,8 +4,8 @@
   "description": "Extension to require TypeScript files from Node",
   "main": "index.js",
   "scripts": {
-    "compile": "tsc index.ts --module commonjs --noImplicitAny",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc index.ts test/spec.ts --module commonjs --noImplicitAny",
+    "test": "istanbul cover _mocha",
     "typings": "tsd reinstall"
   },
   "repository": {
@@ -27,6 +27,9 @@
     "typescript": "^1.4.1"
   },
   "devDependencies": {
+    "chai": "^1.10.0",
+    "istanbul": "^0.3.5",
+    "mocha": "^2.1.0",
     "tsd": "^0.6.0-beta.5"
   }
 }
