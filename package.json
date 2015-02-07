@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "Extension to require TypeScript files from Node",
   "main": "index.js",
+  "files": [
+    "README.md",
+    "LICENSE",
+    "index.js"
+  ],
   "scripts": {
     "compile": "tsc index.ts test/spec.ts --module commonjs --noImplicitAny",
     "coverage": "cat ./coverage/lcov.info | coveralls",
