@@ -11,3 +11,11 @@ language: node_js
 node_js:
 - '0.10'
 sudo: false
+deploy:
+  provider: npm
+  email: pspeter333@gmail.com
+  api_key:
+    secure: CLIIpfrUWesYlcBETcba6XQQTejMFPS1mUqXu5qLhvl83swKZaAVgIcz0IViy69m67bBfZgV57+tpoZuSb6xWWG2cBQsRdahCJcUbjSulgffQJEyn0fPflljzikezRfuwAouzL2DusGkjKKzpwIC6NIoEQn1hUIC5OL1LS+WKZc=
+  on:
+    tags: true
+    repo: pspeter3/typescript-register
