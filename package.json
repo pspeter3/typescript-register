@@ -4,8 +4,10 @@
   "description": "Extension to require TypeScript files from Node",
   "main": "index.js",
   "scripts": {
-    "compile": "tsc index.ts --module commonjs --noImplicitAny",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "tsc index.ts test/spec.ts --module commonjs --noImplicitAny",
+    "coverage": "cat ./coverage/lcov.info | coveralls",
+    "test": "istanbul cover _mocha",
+    "typings": "tsd reinstall"
   },
   "repository": {
     "type": "git",
@@ -24,5 +26,12 @@
   "homepage": "https://github.com/pspeter3/tsreq",
   "dependencies": {
     "typescript": "^1.4.1"
+  },
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "coveralls": "^2.11.2",
+    "istanbul": "^0.3.5",
+    "mocha": "^2.1.0",
+    "tsd": "^0.6.0-beta.5"
   }
 }
