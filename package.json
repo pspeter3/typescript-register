@@ -1,5 +1,5 @@
 {
-  "name": "tsreq",
+  "name": "typescript-register",
   "version": "1.0.0",
   "description": "Extension to require TypeScript files from Node",
   "main": "index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pspeter3/tsreq.git"
+    "url": "https://github.com/pspeter3/typescript-register.git"
   },
   "keywords": [
     "typescript",
@@ -21,9 +21,9 @@
   "author": "Phips Peter",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pspeter3/tsreq/issues"
+    "url": "https://github.com/pspeter3/typescript-register/issues"
   },
-  "homepage": "https://github.com/pspeter3/tsreq",
+  "homepage": "https://github.com/pspeter3/typescript-register",
   "dependencies": {
     "typescript": "^1.4.1"
   },
