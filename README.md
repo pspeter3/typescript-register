@@ -48,13 +48,13 @@ The values are:
 
 Feel free to fork and submit pull requests for the code! Please follow the existing code as an example of style and make sure that all your code passes tests.
 
-[npm-url]: https://www.npmjs.org/package/asana
-[npm-image]: http://img.shields.io/npm/v/asana.svg?style=flat-square
+[npm-url]: https://www.npmjs.org/package/typesript-register
+[npm-image]: http://img.shields.io/npm/v/typesript-register.svg?style=flat-square
 
-[travis-url]: http://travis-ci.org/Asana/node-asana
-[travis-image]: http://img.shields.io/travis/Asana/node-asana/master.svg?style=flat-square
+[travis-url]: http://travis-ci.org/Asana/pspeter3/typescript-register
+[travis-image]: http://img.shields.io/travis/pspeter3/typescript-register/master.svg?style=flat-square
 
 [coveralls-url]: https://coveralls.io/r/pspeter3/typescript-register
-[coveralls-image]: https://img.shields.io/coveralls/jekyll/jekyll/master.svg?style=flat-square
+[coveralls-image]: https://img.shields.io/coveralls/pspeter3/typescript-register/master.svg?style=flat-square
 
 [typescript-require]: https://github.com/eknkc/typescript-require
