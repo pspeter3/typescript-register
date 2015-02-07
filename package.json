@@ -6,7 +6,7 @@
   "files": [
     "README.md",
     "LICENSE",
-    "index.js"
+    "*.js"
   ],
   "scripts": {
     "compile": "tsc index.ts test/spec.ts --module commonjs --noImplicitAny",

@@ -13,6 +13,7 @@ node_js:
 sudo: false
 before_deploy:
 - npm run compile
+- ls
 deploy:
   provider: npm
   email: pspeter333@gmail.com
