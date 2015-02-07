@@ -1,6 +1,6 @@
 {
   "name": "typescript-register",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Extension to require TypeScript files from Node",
   "main": "index.js",
   "files": [
