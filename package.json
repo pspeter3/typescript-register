@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/pspeter3/typescript-register",
   "dependencies": {
+    "chalk": "^0.5.1",
     "typescript": "^1.4.1"
   },
   "devDependencies": {

@@ -1,5 +1,7 @@
 /// <reference path="node_modules/typescript/bin/typescript.d.ts"/>
+/// <reference path="typings/chalk/chalk.d.ts"/>
 /// <reference path="typings/node/node.d.ts"/>
+import chalk = require("chalk");
 import fs = require("fs");
 import path = require("path");
 import typescript = require("typescript");
@@ -135,8 +137,13 @@ function checkErrors(errors: typescript.Diagnostic[]): void {
     if (errors.length === 0) {
         return;
     }
-    var errorMessages = errors.map(toErrorName);
-    throw new Error(errorMessages.join("\n\n"));
+    errors.forEach((err: typescript.Diagnostic): void => {
+        console.error(
+            chalk.bgRed("" + err.code),
+            chalk.grey(path.basename(err.file.filename)),
+            chalk.red(err.messageText));
+    });
+    throw new Error("TypeScript Compilation Errors");
 }
 
 /**
@@ -155,15 +162,6 @@ function toBoolean(value: string): boolean {
  */
 function toOptions(value: string): typescript.CompilerOptions {
     return <typescript.CompilerOptions>JSON.parse(value);
-}
-
-/**
- * Get the name of an error
- * @param  {typescript.Diagnostic} err The TypeScript error
- * @return {string}                    The readable error
- */
-function toErrorName(err: typescript.Diagnostic): string {
-    return err.messageText;
 }
 
 /**
