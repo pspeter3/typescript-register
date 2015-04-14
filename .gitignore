@@ -30,3 +30,4 @@ node_modules
 # TypeScript
 *.js
 typings
+tsconfig.json
