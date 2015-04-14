@@ -1,4 +1,4 @@
-/// <reference path="node_modules/typescript/bin/typescript.d.ts"/>
+/// <reference path="typings/typescript/typescript.d.ts"/>
 /// <reference path="typings/chalk/chalk.d.ts"/>
 /// <reference path="typings/node/node.d.ts"/>
 import chalk = require("chalk");
@@ -120,12 +120,13 @@ function isModified(tsPath: string, jsPath: string): boolean {
 function compile(filename: string, options: typescript.CompilerOptions): void {
     var host = typescript.createCompilerHost(options);
     var program = typescript.createProgram([filename], options, host);
-    var source = program.getSourceFile(filename);
     var checker = program.getTypeChecker(true);
+    var result = checker.emitFiles();
     if (emitError()) {
-        checkErrors(checker.getDiagnostics());
+        checkErrors(program.getDiagnostics()
+            .concat(checker.getDiagnostics()
+            .concat(result.diagnostics)));
     }
-    checker.emitFiles(source);
 }
 
 /**
@@ -137,11 +138,13 @@ function checkErrors(errors: typescript.Diagnostic[]): void {
     if (errors.length === 0) {
         return;
     }
-    errors.forEach((err: typescript.Diagnostic): void => {
+    errors.forEach((diagnostic: typescript.Diagnostic): void => {
+        var position = diagnostic.file.getLineAndCharacterFromPosition(
+            diagnostic.start);
         console.error(
-            chalk.bgRed("" + err.code),
-            chalk.grey(path.basename(err.file.filename)),
-            chalk.red(err.messageText));
+            chalk.bgRed("" + diagnostic.code),
+            chalk.grey(`${diagnostic.file.filename}, (${position.line},${position.character})`),
+            diagnostic.messageText);
     });
     throw new Error("TypeScript Compilation Errors");
 }
