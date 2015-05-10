@@ -1,9 +1,12 @@
 /// <reference path="typings/typescript/typescript.d.ts"/>
 /// <reference path="typings/chalk/chalk.d.ts"/>
 /// <reference path="typings/node/node.d.ts"/>
+/// <reference path="typings/sanitize-filename/sanitize-filename.d.ts"/>
 import chalk = require("chalk");
 import fs = require("fs");
+import os = require("os");
 import path = require("path");
+import sanitize = require("sanitize-filename");
 import typescript = require("typescript");
 
 /**
@@ -55,9 +58,25 @@ function useCache(): boolean {
  */
 var defaultCompilerOptions: typescript.CompilerOptions = {
     module: typescript.ModuleKind.CommonJS,
-    outDir: path.join(path.sep, "tmp", "typescript-register", process.cwd()),
+    outDir: getCachePath(process.cwd()),
     target: typescript.ScriptTarget.ES5
 };
+
+/**
+ * Returns path to cache for source directory.
+ * @param  {string} directory Directory with source code
+ * @return {string}           Path with all special characters replaced with _ and
+ *                            prepended path to temporary directory 
+ */
+function getCachePath(directory: string): string {
+    var sanitizeOptions = {
+        replacement: "_"
+    };
+    var parts = directory.split(path.sep).map((p) => sanitize(p, sanitizeOptions));
+    var cachePath = path.join.apply(null, parts);
+
+    return path.join(os.tmpdir(), "typescript-register", cachePath);
+}
 
 /**
  * Checks the environment for JSON stringified compiler options. By default it
