@@ -88,7 +88,7 @@ function getCachePath(directory: string): string {
     var cachePath = path.join.apply(null, parts);
     var options = compilerOptions() || {};
 
-    return path.join(os.tmpdir(), "typescript-register", options.rootDir, cachePath);
+    return path.join(os.tmpdir(), "typescript-register", options.rootDir || '.', cachePath);
 }
 
 /**
