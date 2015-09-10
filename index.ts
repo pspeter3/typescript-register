@@ -12,8 +12,8 @@ import typescript = require("typescript");
 import _ = require('lodash');
 
 try {
-    var tsConfig = require(path.join(process.cwd(), './tsconfig.json'));
-} finally {}
+    var tsConfig = require(path.join(__dirname, '../../', './tsconfig.json'));
+} catch (error) {}
 
 
 /**
@@ -65,13 +65,13 @@ function useCache(): boolean {
  */
 var defaultCompilerOptions = <typescript.CompilerOptions>_.extend({}, {
     module: typescript.ModuleKind.CommonJS,
-    outDir: getCachePath(process.cwd()),
     target: typescript.ScriptTarget.ES5
 }, tsConfig || {}, {
     // Force the rootDir to be '/' so typescript doesn't complain
     // that rouce files are not under rootDir if typescript files
     // are required in a child node module from a parent
-    rootDir: '/'
+    rootDir: '/',
+    outDir: getCachePath('.')
 });
 
 /**
@@ -123,10 +123,8 @@ function env<T>(config: Config, fallback: T, map: (value: string) => T): T {
  * @return {string}                               The JavaScript filepath
  */
 function dest(filename: string, options: typescript.CompilerOptions): string {
-    var relative = path.relative(path.join(process.cwd(), options.rootDir), path.dirname(filename));
     var basename = path.basename(filename, '.ts');
-    var outDir = options.outDir || path.dirname(filename);
-    return path.join(outDir, relative, basename + ".js");
+    return path.join(getCachePath('.'), path.dirname(filename), basename + ".js");
 }
 
 /**
