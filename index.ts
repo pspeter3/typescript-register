@@ -65,10 +65,14 @@ function useCache(): boolean {
  */
 var defaultCompilerOptions = <typescript.CompilerOptions>_.extend({}, {
     module: typescript.ModuleKind.CommonJS,
-    rootDir: '.',
     outDir: getCachePath(process.cwd()),
     target: typescript.ScriptTarget.ES5
-}, tsConfig || {});
+}, tsConfig || {}, {
+    // Force the rootDir to be '/' so typescript doesn't complain
+    // that rouce files are not under rootDir if typescript files
+    // are required in a child node module from a parent
+    rootDir: '/'
+});
 
 /**
  * Returns path to cache for source directory.
@@ -84,7 +88,7 @@ function getCachePath(directory: string): string {
     var cachePath = path.join.apply(null, parts);
     var options = compilerOptions() || {};
 
-    return path.join(os.tmpdir(), "typescript-register", options.rootDir || '.', cachePath);
+    return path.join(os.tmpdir(), "typescript-register", options.rootDir, cachePath);
 }
 
 /**
