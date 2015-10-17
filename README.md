@@ -1,5 +1,7 @@
 # TypeScript Register [![NPM Version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage][coveralls-image]][coveralls-url]
 
+**Deprecated in favor of ts-node**
+
 Extension to require TypeScript files from Node. This project is an alternative to [typescript-require][typescript-require]. The main differences are:
 
 - Dependencies are run in the same context as the parent
