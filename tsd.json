@@ -17,9 +17,6 @@
     "node/node.d.ts": {
       "commit": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
     },
-    "typescript/typescript.d.ts": {
-      "commit": "ed38db403a56da84731a6f77b545762ee477a45b"
-    },
     "sanitize-filename/sanitize-filename.d.ts": {
       "commit": "b3834d886a95789e6ab56e8244775ec10c5293d0"
     }

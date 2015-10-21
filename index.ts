@@ -1,4 +1,3 @@
-/// <reference path="typings/typescript/typescript.d.ts"/>
 /// <reference path="typings/chalk/chalk.d.ts"/>
 /// <reference path="typings/node/node.d.ts"/>
 /// <reference path="typings/sanitize-filename/sanitize-filename.d.ts"/>
@@ -66,7 +65,7 @@ var defaultCompilerOptions: typescript.CompilerOptions = {
  * Returns path to cache for source directory.
  * @param  {string} directory Directory with source code
  * @return {string}           Path with all special characters replaced with _ and
- *                            prepended path to temporary directory 
+ *                            prepended path to temporary directory
  */
 function getCachePath(directory: string): string {
     var sanitizeOptions = {
@@ -139,12 +138,14 @@ function isModified(tsPath: string, jsPath: string): boolean {
 function compile(filename: string, options: typescript.CompilerOptions): void {
     var host = typescript.createCompilerHost(options);
     var program = typescript.createProgram([filename], options, host);
-    var checker = program.getTypeChecker(true);
-    var result = checker.emitFiles();
+    var result = program.emit();
     if (emitError()) {
-        checkErrors(program.getDiagnostics()
-            .concat(checker.getDiagnostics()
-            .concat(result.diagnostics)));
+        checkErrors(program.getOptionsDiagnostics()
+            .concat(program.getGlobalDiagnostics())
+            .concat(program.getSyntacticDiagnostics())
+            .concat(program.getSemanticDiagnostics())
+            .concat(program.getDeclarationDiagnostics())
+            .concat(result.diagnostics));
     }
 }
 
@@ -158,11 +159,11 @@ function checkErrors(errors: typescript.Diagnostic[]): void {
         return;
     }
     errors.forEach((diagnostic: typescript.Diagnostic): void => {
-        var position = diagnostic.file.getLineAndCharacterFromPosition(
+        var position = diagnostic.file.getLineAndCharacterOfPosition(
             diagnostic.start);
         console.error(
             chalk.bgRed("" + diagnostic.code),
-            chalk.grey(`${diagnostic.file.filename}, (${position.line},${position.character})`),
+            chalk.grey(`${diagnostic.file.fileName}, (${position.line},${position.character})`),
             diagnostic.messageText);
     });
     throw new Error("TypeScript Compilation Errors");
