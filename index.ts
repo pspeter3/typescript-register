@@ -2,12 +2,19 @@
 /// <reference path="typings/chalk/chalk.d.ts"/>
 /// <reference path="typings/node/node.d.ts"/>
 /// <reference path="typings/sanitize-filename/sanitize-filename.d.ts"/>
+/// <reference path="typings/lodash/lodash.d.ts"/>
 import chalk = require("chalk");
 import fs = require("fs");
 import os = require("os");
 import path = require("path");
 import sanitize = require("sanitize-filename");
 import typescript = require("typescript");
+import _ = require('lodash');
+
+try {
+    var tsConfig = require(path.join(__dirname, '../../', './tsconfig.json'));
+} catch (error) {}
+
 
 /**
  * Module Configuration Options
@@ -56,17 +63,22 @@ function useCache(): boolean {
  * TypeScript Default Configuration
  * @type {typescript.CompilerOptions}
  */
-var defaultCompilerOptions: typescript.CompilerOptions = {
+var defaultCompilerOptions = <typescript.CompilerOptions>_.extend({}, {
     module: typescript.ModuleKind.CommonJS,
-    outDir: getCachePath(process.cwd()),
     target: typescript.ScriptTarget.ES5
-};
+}, tsConfig || {}, {
+    // Force the rootDir to be '/' so typescript doesn't complain
+    // that rouce files are not under rootDir if typescript files
+    // are required in a child node module from a parent
+    rootDir: '/',
+    outDir: getCachePath('.')
+});
 
 /**
  * Returns path to cache for source directory.
  * @param  {string} directory Directory with source code
  * @return {string}           Path with all special characters replaced with _ and
- *                            prepended path to temporary directory 
+ *                            prepended path to temporary directory
  */
 function getCachePath(directory: string): string {
     var sanitizeOptions = {
@@ -74,8 +86,9 @@ function getCachePath(directory: string): string {
     };
     var parts = directory.split(path.sep).map((p) => sanitize(p, sanitizeOptions));
     var cachePath = path.join.apply(null, parts);
+    var options = compilerOptions() || {};
 
-    return path.join(os.tmpdir(), "typescript-register", cachePath);
+    return path.join(os.tmpdir(), "typescript-register", options.rootDir || '.', cachePath);
 }
 
 /**
@@ -110,9 +123,8 @@ function env<T>(config: Config, fallback: T, map: (value: string) => T): T {
  * @return {string}                               The JavaScript filepath
  */
 function dest(filename: string, options: typescript.CompilerOptions): string {
-    var basename = path.basename(filename, ".ts");
-    var outDir = options.outDir || path.dirname(filename);
-    return path.join(outDir, basename + ".js");
+    var basename = path.basename(filename, '.ts');
+    return path.join(getCachePath('.'), path.dirname(filename), basename + ".js");
 }
 
 /**
@@ -137,14 +149,13 @@ function isModified(tsPath: string, jsPath: string): boolean {
  * @param {typescript.CompilerOptions} options  The Compiler Options
  */
 function compile(filename: string, options: typescript.CompilerOptions): void {
-    var host = typescript.createCompilerHost(options);
-    var program = typescript.createProgram([filename], options, host);
-    var checker = program.getTypeChecker(true);
-    var result = checker.emitFiles();
+    var program = typescript.createProgram([filename], options);
+    var emitResult = program.emit();
+
+    var allDiagnostics = typescript.getPreEmitDiagnostics(program).concat(emitResult.diagnostics);
+
     if (emitError()) {
-        checkErrors(program.getDiagnostics()
-            .concat(checker.getDiagnostics()
-            .concat(result.diagnostics)));
+        checkErrors(allDiagnostics);
     }
 }
 
@@ -158,8 +169,7 @@ function checkErrors(errors: typescript.Diagnostic[]): void {
         return;
     }
     errors.forEach((diagnostic: typescript.Diagnostic): void => {
-        var position = diagnostic.file.getLineAndCharacterFromPosition(
-            diagnostic.start);
+        var position = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
         console.error(
             chalk.bgRed("" + diagnostic.code),
             chalk.grey(`${diagnostic.file.filename}, (${position.line},${position.character})`),

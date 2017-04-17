@@ -22,6 +22,9 @@
     },
     "sanitize-filename/sanitize-filename.d.ts": {
       "commit": "b3834d886a95789e6ab56e8244775ec10c5293d0"
+    },
+    "lodash/lodash.d.ts": {
+      "commit": "5109e1269d6ab8e8e73b1a5e85d8ceb836d3099f"
     }
   }
 }

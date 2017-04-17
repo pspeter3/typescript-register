@@ -1,6 +1,6 @@
 {
-  "name": "typescript-register",
-  "version": "1.1.0",
+  "name": "steve8708-typescript-register",
+  "version": "1.1.3",
   "description": "Extension to require TypeScript files from Node",
   "main": "index.js",
   "files": [
@@ -31,8 +31,9 @@
   "homepage": "https://github.com/pspeter3/typescript-register",
   "dependencies": {
     "chalk": "^0.5.1",
+    "lodash": "^3.10.1",
     "sanitize-filename": "^1.3.0",
-    "typescript": "^1.4.1"
+    "typescript": "^1.5.0-beta"
   },
   "devDependencies": {
     "chai": "^1.10.0",
