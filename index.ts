@@ -140,7 +140,7 @@ function compile(filename: string, options: typescript.CompilerOptions): void {
     var host = typescript.createCompilerHost(options);
     var program = typescript.createProgram([filename], options, host);
     var checker = program.getTypeChecker(true);
-    var result = checker.emitFiles();
+    var result = program.emit();
     if (emitError()) {
         checkErrors(program.getDiagnostics()
             .concat(checker.getDiagnostics()
